@@ -5,9 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.JsonReader;
+import android.util.Log;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.String;import java.net.HttpURLConnection;
@@ -17,43 +19,44 @@ import java.util.ArrayList;
 /**
  * Created by k-par_000 on 24.02.2017.
  */
-public class gameActivityNum1 extends Activity {
+public class gameActivityNum1 extends AbstractGameActivity {
+
+    private static final String TAG = "Game Activity #1";
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    void update(String s) {
 
-        StrictMode.setThreadPolicy(policy);
-        setContentView(R.layout.menu);
-        updateGame((TextView) findViewById(R.id.textView1));
-
-
-    }
-
-    private void updateGame(TextView textView) {
-        try {
-            Uri uri = Uri.parse("http://pizdyk.000webhostapp.com/").buildUpon().appendQueryParameter("command", "game").appendQueryParameter("id","1").appendQueryParameter("version", "0").build();
-            URL url = new URL(uri.toString());
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-
-            JsonReader reader = new JsonReader(new InputStreamReader(connection.getInputStream()));
-
+        try (JsonReader reader = new JsonReader(new InputStreamReader(new ByteArrayInputStream(s.getBytes("UTF-8"))))) {
 
             reader.beginObject();
-            reader.nextName();
-            String s = reader.nextString();
-            if (!s.toLowerCase().equals("ok")) {
-                reader.nextName();
-                reader.nextString();
-                reader.nextName();
-                textView.setText(reader.nextString());
-            }
-            reader.close();
-        } catch (IOException e) {
+            //todo remake
 
+            String data = "Empty";
+            while (reader.hasNext()) {
+                switch (reader.nextName()) {
+                    case "status":
+
+                        if (reader.nextString().toLowerCase().equals("ok")) {
+                            return;
+                        }
+                        break;
+                    case "version":
+                        reader.nextString();
+                        break;
+                    case "parameters":
+                        data = reader.nextString();
+                }
+
+            }
+            setContentView(R.layout.first_shame);
+            ((TextView)findViewById(R.id.textView1)).setText(data);
+
+
+            Log.d(TAG, "Parsing competed");
+        } catch (Exception e) {
+            Log.d(TAG,"Json parsing failed");
         }
 
     }
-
 }
+`

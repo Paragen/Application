@@ -112,4 +112,11 @@ public class GameListActivity extends Activity implements DownloadCallback{
 
         view.setAdapter(adapter);
     }
+
+    public void onItemClick(View view) {
+        int num = ((ListView)findViewById(R.id.listView)).getPositionForView(view);
+        Intent intent = new Intent(this, gameActivityNum1.class);
+        intent.putExtra(gameActivityNum1.ARG_STR,"command=game&id="+Integer.toString(num)+"&version=0");
+        startActivity(intent);
+    }
 }

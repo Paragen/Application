@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/textView1"
+        android:id="@+id/itemTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -9,5 +9,5 @@
         android:text="TextView"
         android:textColor="#00FF00"
         android:textSize="24sp"
-        android:onClick="onClick">
+        android:onClick="onItemClick">
 </TextView>
