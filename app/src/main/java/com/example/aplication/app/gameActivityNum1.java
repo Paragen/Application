@@ -2,7 +2,7 @@ package com.example.aplication.app;
 
 import android.util.JsonReader;
 import android.util.Log;
-import android.widget.TextView;
+import android.webkit.WebView;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
@@ -32,19 +32,20 @@ public class gameActivityNum1 extends AbstractGameActivity {
                     case "version":
                         reader.nextString();
                         break;
-                    case "parameters":
+                    case "description":
                         data = reader.nextString();
                 }
 
             }
             setContentView(R.layout.first_shame);
-            ((TextView)findViewById(R.id.textView1)).setText(data);
+            ((WebView) findViewById(R.id.webView)).loadData(data, "text/html", "UTF-8");
 
 
             Log.d(TAG, "Parsing competed");
         } catch (Exception e) {
             Log.d(TAG,"Json parsing failed");
         }
+
 
     }
 }

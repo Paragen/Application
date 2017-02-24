@@ -1,6 +1,5 @@
 package com.example.aplication.app;
 
-import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -47,7 +46,7 @@ public class AsyncLoader extends AsyncTask<String, Void, String> {
                 os.close();
 
                 InputStreamReader is = new InputStreamReader(conn.getInputStream(), "UTF-8");
-                final int mSize = 1024 * 10;
+                final int mSize = 1024 * 1024 * 10;
                 int size = 0, curr = 0;
                 char buf[] = new char[mSize];
                 while (size < mSize) {
