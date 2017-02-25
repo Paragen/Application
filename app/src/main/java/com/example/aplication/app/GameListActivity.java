@@ -1,7 +1,9 @@
 package com.example.aplication.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.JsonReader;
 import android.util.Log;
@@ -25,14 +27,16 @@ public class GameListActivity extends Activity implements DownloadCallback{
 
     List<String> list;
     AsyncLoader loader;
-
+    SharedPreferences preferences;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
 
+        preferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String listVersion = preferences.getString(getString(R.string.list_version), "0");
         loader = new AsyncLoader(this);
-        loader.execute("command=games&version=0");
+        loader.execute("command=games&version=" + listVersion);
 
     }
 
@@ -70,8 +74,9 @@ public class GameListActivity extends Activity implements DownloadCallback{
                         }
                         break;
                     case "version":
-                        //todo надо бы записать
-                        reader.skipValue();
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString(getString(R.string.list_version), reader.nextString());
+                        editor.commit();
                         break;
                     case "games":
                         list = new ArrayList<String>();
