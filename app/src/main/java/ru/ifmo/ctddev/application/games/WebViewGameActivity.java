@@ -1,4 +1,4 @@
-package com.example.aplication.app;
+package ru.ifmo.ctddev.application.games;
 
 import android.util.JsonReader;
 import android.util.Log;
@@ -7,8 +7,11 @@ import android.webkit.WebView;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 
+import ru.ifmo.ctddev.application.R;
+import ru.ifmo.ctddev.application.database.Game;
 
-public class gameActivityNum1 extends AbstractGameActivity {
+
+public class WebViewGameActivity extends AbstractGameActivity {
 
     private static final String TAG = "Game Activity #1";
 
@@ -21,9 +24,7 @@ public class gameActivityNum1 extends AbstractGameActivity {
         try (JsonReader reader = new JsonReader(new InputStreamReader(new ByteArrayInputStream(s.getBytes("UTF-8"))))) {
 
             reader.beginObject();
-            //todo remake
 
-            String data = "Empty";
             while (reader.hasNext()) {
                 switch (reader.nextName()) {
                     case "status":
@@ -43,7 +44,7 @@ public class gameActivityNum1 extends AbstractGameActivity {
             Log.d(TAG, "Parsing competed");
         } catch (Exception e) {
             answewr = null;
-            Log.d(TAG,"Json parsing failed");
+            Log.d(TAG, "Json parsing failed");
         }
 
         return answewr;
@@ -51,7 +52,7 @@ public class gameActivityNum1 extends AbstractGameActivity {
 
     @Override
     void updateView(Game game) {
-        setContentView(R.layout.first_shame);
+        setContentView(R.layout.web_view_game);
         ((WebView) findViewById(R.id.webView)).loadData(game.getDescr(), "text/html", "UTF-8");
     }
 }

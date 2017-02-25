@@ -1,8 +1,6 @@
-package com.example.aplication.app;
+package ru.ifmo.ctddev.application.database;
 
-/**
- * Created by User on 24.02.2017.
- */
+
 public class Game {
     private int id;
     private String name;
@@ -10,7 +8,7 @@ public class Game {
     private int version;
     private String shortDescr;
 
-    public void setId( int id){
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -19,7 +17,7 @@ public class Game {
     }
 
 
-    public void setVersion( int version){
+    public void setVersion(int version) {
         this.version = version;
     }
 
@@ -28,7 +26,7 @@ public class Game {
     }
 
 
-    public void setName( String name){
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -37,7 +35,7 @@ public class Game {
     }
 
 
-    public void setDescr( String descr){
+    public void setDescr(String descr) {
         this.descr = descr;
     }
 
@@ -46,11 +44,11 @@ public class Game {
     }
 
 
-    public void setShortDescr( String shortDescr){
+    public void setShortDescr(String shortDescr) {
         this.shortDescr = shortDescr;
     }
 
-    public String getShortDescr(){
+    public String getShortDescr() {
         return shortDescr;
     }
 

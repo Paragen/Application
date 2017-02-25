@@ -1,4 +1,4 @@
-package com.example.aplication.app;
+package ru.ifmo.ctddev.application.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by User on 25.02.2017.
  */
-class DBHelper extends SQLiteOpenHelper {
+public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context) {
         // конструктор суперкласса

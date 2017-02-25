@@ -1,4 +1,4 @@
-package com.example.aplication.app;
+package ru.ifmo.ctddev.application;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,10 +20,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import ru.ifmo.ctddev.application.database.DBHelper;
+import ru.ifmo.ctddev.application.database.Game;
+import ru.ifmo.ctddev.application.games.WebViewGameActivity;
+import ru.ifmo.ctddev.application.util.AsyncLoader;
+import ru.ifmo.ctddev.application.util.DownloadCallback;
+
 /**
  * Created by k-par_000 on 23.02.2017.
  */
-public class GameListActivity extends Activity implements DownloadCallback{
+public class GameListActivity extends Activity implements DownloadCallback {
 
     private final static String TAG = "GameList";
 
@@ -35,7 +41,7 @@ public class GameListActivity extends Activity implements DownloadCallback{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.menu);
+        setContentView(R.layout.list_of_game);
         Log.d(TAG, this.getDatabasePath("MyDB").toString());
         preferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
@@ -58,7 +64,7 @@ public class GameListActivity extends Activity implements DownloadCallback{
 
         List<Game> list = new ArrayList<>();
 
-        try  {
+        try {
             JsonReader reader = new JsonReader(new InputStreamReader(new ByteArrayInputStream(data.getBytes())));
 
             reader.beginObject();
@@ -73,14 +79,13 @@ public class GameListActivity extends Activity implements DownloadCallback{
                     case "version":
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putString(getString(R.string.list_version), reader.nextString());
-                        editor.commit();
+                        editor.apply();
                         break;
                     case "games":
                         reader.beginArray();
                         while (reader.hasNext()) {
                             reader.beginObject();
 
-                            //todo fix string build
                             Game el = new Game();
                             while (reader.hasNext()) {
 
@@ -103,9 +108,9 @@ public class GameListActivity extends Activity implements DownloadCallback{
                 }
             }
 
-            Log.d(TAG,"Json parsing completed");
+            Log.d(TAG, "Json parsing completed");
         } catch (IOException e) {
-            Log.d(TAG,"Json parsing failed:" + e.getMessage());
+            Log.d(TAG, "Json parsing failed:" + e.getMessage());
         }
 
         setProperty(list);
@@ -130,7 +135,7 @@ public class GameListActivity extends Activity implements DownloadCallback{
             sList.add(game.getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.my_item_layout, sList.toArray(buf));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_of_game_item, sList.toArray(buf));
 
         view.setAdapter(adapter);
 
@@ -146,10 +151,10 @@ public class GameListActivity extends Activity implements DownloadCallback{
 
     // item onClick listener
     public void onItemClick(View view) {
-        int num = ((ListView)findViewById(R.id.listView)).getPositionForView(view);
+        int num = ((ListView) findViewById(R.id.listView)).getPositionForView(view);
         Game game = itemMap.get(num + 1);
-        Intent intent = new Intent(this, gameActivityNum1.class);
-        intent.putExtra(gameActivityNum1.ARG_STR, game.getId());
+        Intent intent = new Intent(this, WebViewGameActivity.class);
+        intent.putExtra(WebViewGameActivity.ARG_STR, game.getId());
         Log.d(TAG, "Start game with id: " + Integer.toString(game.getId()));
         startActivity(intent);
     }
@@ -158,7 +163,7 @@ public class GameListActivity extends Activity implements DownloadCallback{
         if (preferences != null) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString(getString(R.string.list_version), "0");
-            editor.commit();
+            editor.apply();
         }
     }
 

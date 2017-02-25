@@ -1,4 +1,4 @@
-package com.example.aplication.app;
+package ru.ifmo.ctddev.application.util;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -19,11 +19,11 @@ public class AsyncLoader extends AsyncTask<String, Void, String> {
 
     private DownloadCallback callback;
 
-    AsyncLoader(DownloadCallback callback) {
+    public AsyncLoader(DownloadCallback callback) {
         setCallback(callback);
     }
 
-    void setCallback(DownloadCallback callback) {
+    public void setCallback(DownloadCallback callback) {
         this.callback = callback;
     }
 
@@ -55,7 +55,7 @@ public class AsyncLoader extends AsyncTask<String, Void, String> {
                     }
                     size += curr;
                 }
-                answer = new String(buf,0,size);
+                answer = new String(buf, 0, size);
             } catch (Exception e) {
                 Log.d(TAG, "Loading failed");
             }

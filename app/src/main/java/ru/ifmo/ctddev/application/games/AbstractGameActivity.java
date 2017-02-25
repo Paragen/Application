@@ -1,9 +1,14 @@
-package com.example.aplication.app;
+package ru.ifmo.ctddev.application.games;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
+import ru.ifmo.ctddev.application.database.DBHelper;
+import ru.ifmo.ctddev.application.database.Game;
+import ru.ifmo.ctddev.application.util.AsyncLoader;
+import ru.ifmo.ctddev.application.util.DownloadCallback;
 
 /**
  * Created by k-par_000 on 24.02.2017.
@@ -15,6 +20,7 @@ public abstract class AbstractGameActivity extends Activity implements DownloadC
     public static final String ARG_STR = "ID";
     protected Game currentGame;
     protected int gameId;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +39,6 @@ public abstract class AbstractGameActivity extends Activity implements DownloadC
 
         loader.execute("command=game&id=" + Integer.toString(gameId) + "&version=" + Integer.toString(currentVersion));
     }
-
 
 
     @Override
