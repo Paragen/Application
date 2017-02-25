@@ -2,18 +2,7 @@ package com.example.aplication.app;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.util.JsonReader;
-import android.util.Log;
-import android.widget.TextView;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 /**
  * Created by k-par_000 on 24.02.2017.
@@ -22,23 +11,38 @@ public abstract class AbstractGameActivity extends Activity implements DownloadC
 
     private AsyncLoader loader;
     private static final String TAG = "Abstract Game Activity";
-    public static final String ARG_STR = "Url";
+    public static final String ARG_STR = "ID";
+    protected Game currentGame;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loader = new AsyncLoader(this);
+
         Intent intent = getIntent();
-        String url = intent.getStringExtra(ARG_STR);
-        loader.execute(url);
+        int gameId = intent.getIntExtra(ARG_STR, 0);
+
+        currentGame = new DBHelper(this).getGame(gameId, 0);
+        updateView(currentGame);
+
+        loader.execute("command=game&id=" + Integer.toString(gameId) + "&version=" + Integer.toString(currentGame.getVersion()));
     }
 
 
 
     @Override
     public void onLoadComplete(String data) {
-        update(data);
+        Game game = gameInfoUpdate(data);
+        if (game != null) {
+            updateView(game);
+            new DBHelper(this).setGame(game);
+        }
     }
 
-    abstract void update(String jsonData);
+    // parse server reply . Return Game if new info received  and null otherwise
+    abstract Game gameInfoUpdate(String jsonData);
+
+    //update views
+    abstract void updateView(Game game);
+
 }

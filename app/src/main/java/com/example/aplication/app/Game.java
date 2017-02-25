@@ -13,31 +13,46 @@ public class Game {
     public void setId( int id){
         this.id = id;
     }
+
+    public int getId() {
+        return id;
+    }
+
+
     public void setVersion( int version){
         this.version = version;
     }
+
+    public int getVersion() {
+        return version;
+    }
+
+
     public void setName( String name){
         this.name = name;
     }
+
+    public String getName() {
+        return name;
+    }
+
+
     public void setDescr( String descr){
         this.descr = descr;
     }
+
+    public String getDescr() {
+        return descr;
+    }
+
+
     public void setShortDescr( String shortDescr){
         this.shortDescr = shortDescr;
     }
-    public String getName(){
-        return name;
-    }
-    public String getDescr(){
-        return descr;
-    }
+
     public String getShortDescr(){
         return shortDescr;
     }
-    public int getId(){
-        return id;
-    }
-    public int getVersion(){
-        return version;
-    }
+
+
 }

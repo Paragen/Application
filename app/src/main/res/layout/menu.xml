@@ -4,10 +4,18 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="RESET"
+        android:textSize="20sp"
+        android:onClick="onResetButtonClick" />
     <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/listView"
             android:layout_gravity="center_horizontal"
             />
+
+
 </LinearLayout>

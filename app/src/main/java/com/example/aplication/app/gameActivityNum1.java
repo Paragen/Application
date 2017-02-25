@@ -13,7 +13,9 @@ public class gameActivityNum1 extends AbstractGameActivity {
     private static final String TAG = "Game Activity #1";
 
     @Override
-    void update(String s) {
+    Game gameInfoUpdate(String s) {
+
+        Game answewr = new Game();
 
         try (JsonReader reader = new JsonReader(new InputStreamReader(new ByteArrayInputStream(s.getBytes("UTF-8"))))) {
 
@@ -24,28 +26,31 @@ public class gameActivityNum1 extends AbstractGameActivity {
             while (reader.hasNext()) {
                 switch (reader.nextName()) {
                     case "status":
-
                         if (reader.nextString().toLowerCase().equals("ok")) {
-                            return;
+                            return null;
                         }
                         break;
                     case "version":
-                        reader.nextString();
+                        answewr.setVersion(reader.nextInt());
                         break;
                     case "description":
-                        data = reader.nextString();
+                        answewr.setDescr(reader.nextString());
                 }
 
             }
-            setContentView(R.layout.first_shame);
-            ((WebView) findViewById(R.id.webView)).loadData(data, "text/html", "UTF-8");
-
 
             Log.d(TAG, "Parsing competed");
         } catch (Exception e) {
+            answewr = null;
             Log.d(TAG,"Json parsing failed");
         }
 
+        return answewr;
+    }
 
+    @Override
+    void updateView(Game game) {
+        setContentView(R.layout.first_shame);
+        ((WebView) findViewById(R.id.webView)).loadData(game.getDescr(), "text/html", "UTF-8");
     }
 }

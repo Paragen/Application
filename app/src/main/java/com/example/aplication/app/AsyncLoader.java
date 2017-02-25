@@ -17,7 +17,7 @@ public class AsyncLoader extends AsyncTask<String, Void, String> {
     static final String QUERY = "http://pizdyk.000webhostapp.com/";
     private static final String TAG = "AsyncLoader";
 
-    DownloadCallback callback;
+    private DownloadCallback callback;
 
     AsyncLoader(DownloadCallback callback) {
         setCallback(callback);
