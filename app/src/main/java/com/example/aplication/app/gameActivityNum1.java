@@ -16,6 +16,7 @@ public class gameActivityNum1 extends AbstractGameActivity {
     Game gameInfoUpdate(String s) {
 
         Game answewr = new Game();
+        answewr.setId(gameId);
 
         try (JsonReader reader = new JsonReader(new InputStreamReader(new ByteArrayInputStream(s.getBytes("UTF-8"))))) {
 

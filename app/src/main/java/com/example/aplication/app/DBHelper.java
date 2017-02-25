@@ -33,7 +33,7 @@ class DBHelper extends SQLiteOpenHelper {
 
     public void setList(List<Game> games) {
         SQLiteDatabase db = this.getWritableDatabase();
-        int clearCount = db.delete("games", null, null);
+        db.execSQL("delete from games");
 
         db.beginTransaction();
         try {
@@ -42,24 +42,33 @@ class DBHelper extends SQLiteOpenHelper {
                 cv.put("name", game.getName());
                 cv.put("id", game.getId());
                 long rowID = db.insert("games", null, cv);
+
             }
+            db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
 
         db.close();
+        this.close();
     }
 
     public void setGame(Game game) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("UPDATE `games` SET `version`=" + game.getVersion() + ",`descr`=" + game.getDescr() + " WHERE id=" + game.getId());
+        ContentValues cv = new ContentValues();
+        cv.put("descr", game.getDescr());
+        cv.put("version", game.getVersion());
+        String buff[] = new String[1];
+        buff[0] = Integer.toString(game.getId());
+        db.update("games", cv, "id=?", buff);
         db.close();
+        this.close();
     }
 
     public List<Game> getList() {
         SQLiteDatabase db = this.getWritableDatabase();
         ArrayList<Game> games = new ArrayList<>();
-        Cursor c = db.query("mytable", null, null, null, null, null, null);
+        Cursor c = db.query("games", null, null, null, null, null, null);
 
         if (c.moveToFirst()) {
 
@@ -86,20 +95,44 @@ class DBHelper extends SQLiteOpenHelper {
                 // переход на следующую строку
                 // а если следующей нет (текущая - последняя), то false - выходим из цикла
             } while (c.moveToNext());
-        } else
+        } else {
             return null;
+        }
         c.close();
         db.close();
-
+        this.close();
 
         return games;
     }
 
     public Game getGame(int id, int key) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query("games", null, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+        Cursor c = db.query("games", null, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+        Game game;
+        if (c.moveToFirst()) {
+
+            // определяем номера столбцов по имени в выборке
+            int idColIndex = c.getColumnIndex("id");
+            int nameColIndex = c.getColumnIndex("name");
+            int versionColIndex = c.getColumnIndex("version");
+            int descrColIndex = c.getColumnIndex("descr");
+            int shortdescrColIndex = c.getColumnIndex("shortdescr");
+
+
+            // получаем значения по номерам столбцов и пишем все в лог
+            game = new Game();
+            game.setName(c.getString(nameColIndex));
+            game.setId(c.getInt(idColIndex));
+            game.setVersion(c.getInt(versionColIndex));
+            game.setShortDescr(c.getString(shortdescrColIndex));
+            game.setDescr(c.getString(descrColIndex));
+
+        } else {
+            game = null;
+        }
         db.close();
-        return null;
+        this.close();
+        return game;
     }
 
 

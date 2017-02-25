@@ -36,9 +36,8 @@ public class GameListActivity extends Activity implements DownloadCallback{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
-
+        Log.d(TAG, this.getDatabasePath("MyDB").toString());
         preferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-
 
         String listVersion = preferences.getString(getString(R.string.list_version), "0");
 
