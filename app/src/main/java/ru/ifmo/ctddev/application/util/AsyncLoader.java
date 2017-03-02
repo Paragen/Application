@@ -35,7 +35,7 @@ public class AsyncLoader extends AsyncTask<String, Void, String> {
             String message = strings[0];
             try {
                 HttpURLConnection conn = (HttpURLConnection) new URL(QUERY).openConnection();
-                conn.setConnectTimeout(5000);
+                conn.setConnectTimeout(20000);
 //              conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
