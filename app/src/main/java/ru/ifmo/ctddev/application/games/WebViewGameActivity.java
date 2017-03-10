@@ -6,7 +6,7 @@ import ru.ifmo.ctddev.application.R;
 import ru.ifmo.ctddev.application.database.Game;
 
 
-public class WebViewGameActivity extends AbstractGameActivity {
+public class WebViewGameActivity extends DynamicGames {
 
     private static final String TAG = "Game Activity #1";
 

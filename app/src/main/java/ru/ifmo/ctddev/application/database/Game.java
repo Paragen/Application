@@ -7,6 +7,16 @@ public class Game {
     private String descr;
     private int version;
     private String shortDescr;
+    private Class aClass;
+
+    public Game() {
+    }
+
+    public Game(String name, int id, Class aClass) {
+        this.name = name;
+        this.id = id;
+        this.aClass = aClass;
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -52,5 +62,11 @@ public class Game {
         return shortDescr;
     }
 
+    public void setGameClass(Class aClass) {
+        this.aClass = aClass;
+    }
 
+    public Class getGameClass() {
+        return aClass;
+    }
 }

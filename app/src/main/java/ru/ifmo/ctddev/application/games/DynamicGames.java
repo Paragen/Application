@@ -4,27 +4,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.JsonReader;
-import android.util.JsonWriter;
 import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import ru.ifmo.ctddev.application.database.DBHelper;
 import ru.ifmo.ctddev.application.database.Game;
 import ru.ifmo.ctddev.application.util.AsyncLoader;
 import ru.ifmo.ctddev.application.util.DownloadCallback;
 
-/**
- * Created by k-par_000 on 24.02.2017.
- */
-public abstract class AbstractGameActivity extends Activity implements DownloadCallback {
+public abstract class DynamicGames extends Activity implements DownloadCallback {
 
     private AsyncLoader loader;
-    private static final String TAG = "Abstract Game Activity";
+    private static final String TAG = "Dynamic Game Activity";
     public static final String ARG_STR = "ID";
     protected Game currentGame;
     protected int gameId;
@@ -47,7 +40,7 @@ public abstract class AbstractGameActivity extends Activity implements DownloadC
             currentVersion = currentGame.getVersion();
         }
 
-        loader.execute("command=static_game&id=" + Integer.toString(gameId) + "&version=" + Integer.toString(currentVersion));
+        loader.execute("command=dynamic_game&id=" + Integer.toString(gameId) + "&version=" + Integer.toString(currentVersion));
     }
 
 
@@ -83,25 +76,8 @@ public abstract class AbstractGameActivity extends Activity implements DownloadC
                     case "version":
                         answer.setVersion(reader.nextInt());
                         break;
-                    case "data":
-                        reader.beginArray();
-                        List<String> list = new ArrayList<>();
-
-                        while (reader.hasNext()) {
-                            list.add(reader.nextString());
-                        }
-
-                        reader.endArray();
-
-                        JsonWriter writer = new JsonWriter(new StringWriter());
-                        writer.beginArray();
-                        for (String str :
-                                list) {
-                            writer.value(str);
-                        }
-
-                        writer.endArray();
-                        answer.setDescr(writer.toString());
+                    case "descr":
+                        answer.setDescr(reader.nextString());
                 }
 
             }
@@ -121,8 +97,4 @@ public abstract class AbstractGameActivity extends Activity implements DownloadC
     protected void welcome() {
     }
 
-    @Override
-    public void onDestroy() {
-        loader.cancel(true);
-    }
 }

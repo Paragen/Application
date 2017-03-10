@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".GameListActivity" />
         <activity android:name=".games.WebViewGameActivity" />
+        <activity android:name=".games.OrButGame" />
         <activity android:name=".games.MafiaActivity" >
         </activity>
         <activity

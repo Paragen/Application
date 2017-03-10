@@ -22,6 +22,7 @@ import java.util.Map;
 
 import ru.ifmo.ctddev.application.database.DBHelper;
 import ru.ifmo.ctddev.application.database.Game;
+import ru.ifmo.ctddev.application.games.OrButGame;
 import ru.ifmo.ctddev.application.games.WebViewGameActivity;
 import ru.ifmo.ctddev.application.util.AsyncLoader;
 import ru.ifmo.ctddev.application.util.DownloadCallback;
@@ -42,14 +43,31 @@ public class GameListActivity extends Activity implements DownloadCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_game);
-        Log.d(TAG, this.getDatabasePath("MyDB").toString());
-        preferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
+        preferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String listVersion = preferences.getString(getString(R.string.list_version), "0");
+
+        list = new ArrayList<>();
+        itemMap = new HashMap<>();
+        setStaticGameList();
+
+        if (!listVersion.equals("0")) {
+            loadListFromDB();
+        }
 
         loader = new AsyncLoader(this);
         loader.execute("command=games&version=" + listVersion);
 
+    }
+
+    private void setStaticGameList() {
+        addStaticGame("Или / не", 1, OrButGame.class);
+    }
+
+    private void addStaticGame(String name, int id, Class aClass) {
+        Game tmp = new Game(name, id, aClass);
+        list.add(name);
+        itemMap.put(list.size(), tmp);
     }
 
     void loadListFromDB() {
@@ -128,32 +146,30 @@ public class GameListActivity extends Activity implements DownloadCallback {
         String buf[] = new String[0];
         Game game;
         Iterator<Game> iter = list.iterator();
-        List<String> sList = new ArrayList<>();
+        List<String> sList = new ArrayList<>(this.list);
 
         while (iter.hasNext()) {
             game = iter.next();
             sList.add(game.getName());
+            itemMap.put(sList.size(), game);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_of_game_item, sList.toArray(buf));
 
         view.setAdapter(adapter);
-
-        itemMap = new HashMap<>();
-
-        iter = list.iterator();
-        int i = 0;
-
-        while (iter.hasNext()) {
-            itemMap.put(++i, iter.next());
-        }
     }
 
     // item onClick listener
     public void onItemClick(View view) {
         int num = ((ListView) findViewById(R.id.listView)).getPositionForView(view);
         Game game = itemMap.get(num + 1);
-        Intent intent = new Intent(this, WebViewGameActivity.class);
+
+        Intent intent;
+        if (game.getGameClass() == null) {
+            intent = new Intent(this, WebViewGameActivity.class);
+        } else {
+            intent = new Intent(this, OrButGame.class);
+        }
         intent.putExtra(WebViewGameActivity.ARG_STR, game.getId());
         Log.d(TAG, "Start game with id: " + Integer.toString(game.getId()));
         startActivity(intent);
